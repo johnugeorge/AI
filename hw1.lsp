@@ -79,7 +79,10 @@
 		)
 		(if (and (numberp y) (zerop y))
 			x
-			(list '- x y)
+			(if(equal x y)
+				0
+				(list '- x y)
+			)
 		)
 	)
 )
@@ -101,7 +104,6 @@
 		)
 		(if(numberp y)
 			(if(zerop y)
-		;(if (and (numberp y) (zerop y))
 				0
 				(if (eq y 1)
 					x
@@ -111,6 +113,7 @@
 					)
 				)		
 			)	
+			(list '* x y)
 		)
 	)
 )
