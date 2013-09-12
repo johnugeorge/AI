@@ -1,17 +1,14 @@
 
 (defun derivplus (expr var)
-	;(list '+  (deriv (second expr) var)  (deriv (third expr) var))
 	(splus (deriv (second expr) var)  (deriv (third expr) var))
 )
 
 (defun derivmult (expr var)
-	;(list '+  (* (third expr) (deriv (second expr) var))  (* (second expr) (deriv (third expr) var)))
 	(splus  (smult (third expr) (deriv (second expr) var))  (smult (second expr) (deriv (third expr) var)))
 )
 
 (defun derivdiv (expr var)
 
-	;(list '/ (ssub (smult (third expr) (deriv (second expr) var)) (smult (second expr) (deriv (third expr) var))) (list '* (third expr) (third expr)))
 	(sdiv (ssub (smult (third expr) (deriv (second expr) var)) (smult (second expr) (deriv (third expr) var))) (smult (third expr) (third expr)))
 )
 
@@ -25,6 +22,26 @@
 	(sunary (deriv (second expr) var))
 )
 
+(defun derivexpt (expr var)
+	
+	(smult (third expr) (smult (sexpt (second expr) (ssub (third expr) 1)) (deriv (second expr) var)))
+)
+
+(defun derivsqrt (expr var)
+	
+	(smult (sdiv 1 2) (smult (sexp (second expr) (ssub (sdiv 1 2) 1)) (deriv (second expr) var)))
+)
+
+(defun derivlog (expr var)
+	
+	(smult (sdiv 1 (second expr)) (deriv (second expr) var))
+)
+
+(defun derivexp (expr var)
+	
+	(smult (sexp expr) (deriv (second expr) var))
+)
+
 (defun deriv (expr var)
  	(if (atom expr)
 		  (if (equal expr var) 1 0)
@@ -33,12 +50,20 @@
 				    (derivplus expr var))
   			   ((eq '* (first expr)) ; MULT
 				    (derivmult expr var))
-  			   ((eq '- (first expr)) ; SUB
+  			   ((eq '- (first expr)) 
 				    (if(subsetp (butlast expr) (list '-) )
-					(derivunary expr var)	
-				    	(derivsub expr var)))
+					(derivunary expr var) ; UNARY
+				    	(derivsub expr var))) ;SUB
   			   ((eq '/ (first expr)) ; DIV
 				    (derivdiv expr var))
+  			   ((eq 'expt (first expr)) ; EXP
+				    (derivexpt expr var))
+  			   ((eq 'sqrt (first expr)) ; sqrt
+				    (derivsqrt expr var))
+  			   ((eq 'log (first expr)) ; log
+				    (derivlog expr var))
+  			   ((eq 'exp (first expr)) ; power e
+				    (derivexp expr var))
   			   (t ; Invalid
 		       		  (error "Invalid Expression!"))
  		    )
@@ -134,7 +159,21 @@
 	)
 )
 
+(defun sexpt (x y)
+	(if (and (numberp x) (numberp y))
+		(expt x y)
+		(if (and  (numberp y) (eq y 0))
+			1
+			(if (and (numberp y)(eq y 1))
+				x
+				(list 'expt x y)
+			)
+		)
+	)
+)				
 			
-				
+(defun sexp (x)
+	x
+)	
 				
 	
