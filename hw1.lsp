@@ -42,6 +42,21 @@
 	(smult (sexp expr) (deriv (second expr) var))
 )
 
+(defun derivsin (expr var)
+	
+	(smult (scos (second expr)) (deriv (second expr) var))
+)
+
+(defun derivcos (expr var)
+	
+	(sunary (smult (ssin (second expr)) (deriv (second expr) var)))
+)
+
+(defun derivtan (expr var)
+	
+	(smult (splus 1 (sexpt (stan (second expr)) 2)) (deriv (second expr) var))
+)
+
 (defun deriv (expr var)
  	(if (atom expr)
 		  (if (equal expr var) 1 0)
@@ -64,6 +79,12 @@
 				    (derivlog expr var))
   			   ((eq 'exp (first expr)) ; power e
 				    (derivexp expr var))
+  			   ((eq 'sin (first expr)) ; power e
+				    (derivsin expr var))
+  			   ((eq 'cos (first expr)) ; power e
+				    (derivcos expr var))
+  			   ((eq 'tan (first expr)) ; power e
+				    (derivtan expr var))
   			   (t ; Invalid
 		       		  (error "Invalid Expression!"))
  		    )
@@ -175,5 +196,24 @@
 (defun sexp (x)
 	x
 )	
-				
-	
+
+(defun ssin (x)	
+	(if (and (numberp x) (zerop x))	
+		0
+		(list 'sin x)
+	)
+)
+
+(defun scos (x)	
+	(if (and (numberp x) (zerop x))	
+		1
+		(list 'cos x)
+	)
+)
+
+(defun stan (x)	
+	(if (and (numberp x) (zerop x))	
+		0
+		(list 'tan x)
+	)
+)
