@@ -202,15 +202,21 @@
 )
 
 (defun sdiv (x y)
-	(if (equalp 0 y)
-            (print "Error")
-	    (if (equalp 0 x)
+	(if (eq 0 y)
+            (print " Division by Zero. Error !!")
+	    (if (eq 0 x)
 		0
 		(if (equal x y)
 			1
-			(if (and (numberp x) (numberp y))
-				(/ x y)
-				 (list '/ x y)
+			(if (eq y 1)
+				x
+				(if (eq y -1)
+					(sunary x)
+					(if (and (numberp x) (numberp y))
+						(/ x y)
+				 		(list '/ x y)
+					)
+				)
 			)
 		)
 	     )
