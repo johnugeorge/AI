@@ -91,6 +91,43 @@
 	 )
 )
 
+(defun simplify (expr)
+	(if (atom expr)
+		expr
+		(cond
+			   ((eq '+ (first expr)) ; PLUS
+				    (splus (simplify (second expr)) (simplify (third expr))))
+  			   ((eq '* (first expr)) ; MULT
+				    (smult  (simplify (second expr)) (simplify (third expr))))
+  			   ((eq '- (first expr)) 
+				    (if(subsetp (butlast expr) (list '-) )
+					(sunary (simplify (second expr))) ; UNARY
+				    	(ssub  (simplify (second expr)) (simplify (third expr))))) ;SUB
+  			   ((eq '/ (first expr)) ; DIV
+				    (sdiv (simplify (second expr)) (simplify (third expr))))
+  			   ((eq 'expt (first expr)) ; EXP
+				    (sexpt (simplify (second expr))))
+  			   ((eq 'sqrt (first expr)) ; sqrt
+				    (ssqrt (simplify (second expr))))
+  			   ((eq 'log (first expr)) ; log
+				    (slog (simplify (second expr))))
+  			   ((eq 'exp (first expr)) ; power e
+				    (sexp (simplify (second expr))))
+  			   ((eq 'sin (first expr)) ; power e
+				    (ssin (simplify (second expr))))
+  			   ((eq 'cos (first expr)) ; power e
+				    (scos (simplify (second expr))))
+  			   ((eq 'tan (first expr)) ; power e
+				    (stan (simplify (second expr))))
+  			   (t ; Invalid
+		       		  (error "Invalid Expression!"))
+		)
+	)
+)
+
+
+
+
 (defun splus (x y)
 	(if (numberp x)
 		(if (numberp y)
