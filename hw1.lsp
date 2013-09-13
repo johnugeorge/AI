@@ -244,9 +244,12 @@
 )	
 
 (defun slog (x)
-	(if(numberp x)
-		(log x)
-		(list 'exp x)
+	(if(and (numberp x) (zerop x))
+		(print "Log error as argument is zero" )
+		(if (numberp x)
+			(log x)
+			(list 'exp x)
+		)
 	  )
 )
 
