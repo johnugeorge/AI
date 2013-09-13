@@ -39,7 +39,7 @@
 
 (defun derivexp (expr var)
 	
-	(smult (sexp expr) (deriv (second expr) var))
+	(smult (sexp (second expr)) (deriv (second expr) var))
 )
 
 (defun derivsin (expr var)
@@ -106,7 +106,7 @@
   			   ((eq '/ (first expr)) ; DIV
 				    (sdiv (simplify (second expr)) (simplify (third expr))))
   			   ((eq 'expt (first expr)) ; EXP
-				    (sexpt (simplify (second expr))))
+				    (sexpt (simplify (second expr)) (simplify (third expr))))
   			   ((eq 'sqrt (first expr)) ; sqrt
 				    (ssqrt (simplify (second expr))))
   			   ((eq 'log (first expr)) ; log
@@ -237,26 +237,82 @@
 )				
 			
 (defun sexp (x)
-	x
+	(if(numberp x)
+		(exp x)
+		(list 'exp x)
+	  )
 )	
 
+(defun slog (x)
+	(if(numberp x)
+		(log x)
+		(list 'exp x)
+	  )
+)
+
 (defun ssin (x)	
-	(if (and (numberp x) (zerop x))	
-		0
+	(if (numberp x)	
+		(sin x)
 		(list 'sin x)
 	)
 )
 
 (defun scos (x)	
-	(if (and (numberp x) (zerop x))	
-		1
+	(if (numberp x)
+		(cos x)
 		(list 'cos x)
 	)
 )
 
 (defun stan (x)	
-	(if (and (numberp x) (zerop x))	
-		0
+	(if (numberp x)
+		(tan x)
 		(list 'tan x)
 	)
+)
+
+(defun deriv-eval (expr var val)
+
+	(setq deriv-result (deriv expr var))
+	(evaluate deriv-result var val)
+
+)
+
+(defun evaluate (expr var val)
+
+	(if (and (atom expr) (equal expr var))
+		val
+		(if (atom expr)
+			expr	
+			(cond
+			   ((eq '+ (first expr)) ; PLUS
+				    (splus (evaluate (second expr) var val) (evaluate (third expr) var val)))
+  			   ((eq '* (first expr)) ; MULT
+				    (smult  (evaluate (second expr) var val) (evaluate (third expr) var val)))
+  			   ((eq '- (first expr)) 
+				    (if(subsetp (butlast expr) (list '-) )
+					(sunary (evaluate (second expr) var val)) ; UNARY
+				    	(ssub  (evaluate (second expr) var val) (evaluate (third expr) var val)))) ;SUB
+  			   ((eq '/ (first expr)) ; DIV
+				    (sdiv (evaluate (second expr) var val) (evaluate (third expr) var val)))
+  			   ((eq 'expt (first expr)) ; EXP
+				    (sexpt (evaluate (second expr) var val) (evaluate (third expr) var val)))
+  			   ((eq 'sqrt (first expr)) ; sqrt
+				    (ssqrt (evaluate (second expr) var val)))
+  			   ((eq 'log (first expr)) ; log
+				    (slog (evaluate (second expr) var val)))
+  			   ((eq 'exp (first expr)) ; power e
+				    (sexp (evaluate (second expr) var val)))
+  			   ((eq 'sin (first expr)) ; power e
+				    (ssin (evaluate (second expr) var val)))
+  			   ((eq 'cos (first expr)) ; power e
+				    (scos (evaluate (second expr) var val)))
+  			   ((eq 'tan (first expr)) ; power e
+				    (stan (evaluate (second expr) var val)))
+  			   (t ; Invalid
+		       		  (error "Invalid Expression!"))
+			)
+		)
+	)
+
 )
