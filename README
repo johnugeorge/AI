@@ -133,19 +133,53 @@ j)
 4)Simplify examples
 
 
-a)(simplify '(* (- (- (* 1 x)) 0) 1))
+a)
+(simplify '(* (- (- (* 1 x)) 0) 1))
 
 ====> (- X)
 
-b)(simplify '(+ (sin 0) (* (cos 0) (exp x))))
+b)
+(simplify '(+ (sin 0) (* (cos 0) (exp x))))
 
 ====>(EXP X)
 
 
 c)
+(simplify '(/ (exp 0) (* (+ (cos 0) (sqrt 0)) 2)))
 
+====>1/2
 
 d)
+(simplify '(expt (+ (log (exp (- (tan 0) 2))) 4) 4))
 
+====>16.0
 
 e)
+(simplify '(+ X (- X (sqrt (+ (tan 0) (expt 2 2))))))
+
+====>(+ X (- X 2))
+
+f)
+(simplify '(/ (- (- (expt x 2) (expt x 2)) (* 2 X)) (exp 0)))
+
+====>(- (* 2 X))
+
+g)
+(simplify '(* (* x 1) (+ (expt 2 2) (- (+ 2 2)))))
+
+====>0
+
+h)
+(simplify '(* (/ (+ (* -1 X) (- X)) -1) (sqrt 4)))
+
+====>(* (- (+ (- X) (- X))) 2)
+
+i)
+(simplify '(log (+ x (/ (* x x) (* x x)))))
+
+====>(LOG (+ X 1))
+
+j)
+(simplify '(+ (expt x (sqrt (cos 0))) (- (expt x 0))))
+
+====>(+ X -1)
