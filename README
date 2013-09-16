@@ -9,30 +9,78 @@ unary minus, multiplication, division, sqrt, log, exp,sin, cos, tan.
 
 2.Usage
 
-a)Load the "deriv.lsp" program 
+	a)Load the "deriv.lsp" program 
 		(load "deriv.lsp")
 
-b)Find the derivative for the expression <expr> with respect to variable <var>
-	(deriv '<expr> '<var>)
+	b)Find the derivative for the expression <expr> with respect to variable <var>
+		(deriv '<expr> '<var>)
 
-c)Assign numerical value <val> to derivative of expression <expr> wrt to variable <var>
-	(deriv-eval '<expr> '<var> '<val>)
+	c)Assign numerical value <val> to derivative of expression <expr> wrt to variable <var>
+		(deriv-eval '<expr> '<var> '<val>)
 
-d)Simplification function  that can recursively simplify expression <expr>
-	(simplify '<expr>)
+	d)Simplification function  that can recursively simplify expression <expr>
+		(simplify '<expr>)
 
 
 3. Examples
 
 
-a)(deriv '(/ (+ (* x (cos x)) (exp (log x))) (+ (expt x 4) (tan x))) 'x)
+a)
+(deriv '(/ (+ (* x (cos x)) (exp (log x))) (+ (expt x 4) (tan x))) 'x)
 
-===> (/ (- (* (+ (EXPT X 4) (TAN X)) (+ (+ (COS X) (* X (- (SIN X)))) (* (EXP (LOG X)) (/ 1 X))))
-  (* (+ (* X (COS X)) (EXP (LOG X))) (+ (* 4 (EXPT X 3)) (+ 1 (EXPT (TAN X) 2)))))
- (* (+ (EXPT X 4) (TAN X)) (+ (EXPT X 4) (TAN X))))
+====> (/ (- (* (+ (EXPT X 4) (TAN X)) (+ (+ (COS X) (* X (- (SIN X)))) (* (EXP (LOG X)) (/ 1 X)))) (* (+ (* X (COS X)) (EXP (LOG X))) (+ (* 4 (EXPT X 3)) (+ 1 (EXPT (TAN X) 2))))) (* (+ (EXPT X 4) (TAN X)) (+ (EXPT X 4) (TAN X))))
 
 
 (deriv-eval  '(/ (+ (* x (cos x)) (exp (log x))) (+ (expt x 4) (tan x))) 'x  5)
-0.0012666791
+====>0.0012666791
+
+b)
+(deriv '(* (log (/ (sin x) (expt x 3))) (- (exp x) (sqrt x))) 'x)
+
+====>(+ (* (- (EXP X) (SQRT X 2))  (* (/ 1 (/ (SIN X) (EXPT X 3))) (/ (- (* (EXPT X 3) (COS X)) (* (SIN X) (* 3 (EXPT X 2)))) (* (EXPT X 3) (EXPT X 3)))))  (* (LOG (/ (SIN X) (EXPT X 3))) (- (EXP X) (* 1/2 (EXPT X -1/2)))))
 
 
+ (deriv-eval '(* (log (/ (sin x) (expt x 3))) (- (exp x) (sqrt x))) 'x 2)
+
+====>-26.99557
+
+c)
+(deriv '(/ (log (exp x)) (+ (expt (sin x) 2) (expt (cos x) 2))) 'x)
+
+====>(/ (- (* (+ (EXPT (SIN X) 2) (EXPT (COS X) 2)) (* (/ 1 (EXP X)) (EXP X))) (* (LOG (EXP X)) (+ (* 2 (* (SIN X) (COS X))) (* 2 (* (COS X) (- (SIN X))))))) (* (+ (EXPT (SIN X) 2) (EXPT (COS X) 2)) (+ (EXPT (SIN X) 2) (EXPT (COS X) 2))))
+
+(deriv-eval '(/ (log (exp x)) (+ (expt (sin x) 2) (expt (cos x) 2))) 'x 5)
+====> 1
+
+
+d) 
+(deriv '(/ (* x (sqrt x)) (- (- 1 (tan (expt x 2))))) 'x) 
+
+====>(/ (- (* (- (- 1 (TAN (EXPT X 2)))) (+ (SQRT X) (* X (* 1/2 (EXPT X -1/2)))))
+  (* (* X (SQRT X)) (- (- (* (+ 1 (EXPT (TAN (EXPT X 2)) 2)) (* 2 X)))))) (* (- (- 1 (TAN (EXPT X 2)))) (- (- 1 (TAN (EXPT X 2))))))
+
+
+ (deriv-eval '(/ (* x (sqrt x)) (- (- 1 (tan (expt x 2))))) 'x 10) 
+
+====> -340.60468
+
+e)
+(deriv '(+ (+ (* (sin x) (sin x)) (expt (cos x) 2)) (log x)) 'x)
+
+====>(+ (+ (+ (* (SIN X) (COS X)) (* (SIN X) (COS X))) (* 2 (* (COS X) (- (SIN X))))) (/ 1 X))
+
+(deriv-eval '(+ (+ (* (sin x) (sin x)) (expt (cos x) 2)) (log x)) 'x 5)
+
+====>0.2
+
+f)
+(deriv '(+ (* (sqrt x) (log (exp (expt x (-  (/ 1 2)))))) (expt x 2)) 'x)
+
+====>(+ (+ (* (LOG (EXP (EXPT X (- (/ 1 2))))) (* 1/2 (EXPT X -1/2))) (* (SQRT X) (* (/ 1 (EXP (EXPT X (- (/ 1 2))))) (* (EXP (EXPT X (- (/ 1 2)))) (* (- (/ 1 2)) (EXPT X (- (- (/ 1 2)) 1))))))) (* 2 X))
+
+
+(deriv-eval '(+ (* (sqrt x) (log (exp (expt x (-  (/ 1 2)))))) x) 'x 4)
+
+====>8.0
+
+g)
