@@ -9,6 +9,8 @@ unary minus, multiplication, division, sqrt, log, exp,sin, cos, tan.
 
 2.Usage
 
+Tested with GNU lisp (clisp)
+
 	a)Load the "deriv.lsp" program 
 		(load "deriv.lsp")
 
@@ -22,7 +24,7 @@ unary minus, multiplication, division, sqrt, log, exp,sin, cos, tan.
 		(simplify '<expr>)
 
 
-3. Examples
+3. Deriv and Deriv-Eval Examples
 
 
 a)
@@ -79,8 +81,71 @@ f)
 ====>(+ (+ (* (LOG (EXP (EXPT X (- (/ 1 2))))) (* 1/2 (EXPT X -1/2))) (* (SQRT X) (* (/ 1 (EXP (EXPT X (- (/ 1 2))))) (* (EXP (EXPT X (- (/ 1 2)))) (* (- (/ 1 2)) (EXPT X (- (- (/ 1 2)) 1))))))) (* 2 X))
 
 
-(deriv-eval '(+ (* (sqrt x) (log (exp (expt x (-  (/ 1 2)))))) x) 'x 4)
+(deriv-eval '(+ (* (sqrt x) (log (exp (expt x (-  (/ 1 2)))))) (expt x 2)) 'x 4)
 
 ====>8.0
 
 g)
+(deriv '(* (/ x (log x)) (/ (* (log x)(exp (log x))) (sqrt x))) 'x)
+
+====>(+ (* (/ (* (LOG X) (EXP (LOG X))) (SQRT X)) (/ (- (LOG X) (* X (/ 1 X))) (* (LOG X) (LOG X))))  (* (/ X (LOG X))
+  (/ (- (* (SQRT X) (+ (* (EXP (LOG X)) (/ 1 X)) (* (LOG X) (* (EXP (LOG X)) (/ 1 X))))) (* (* (LOG X) (EXP (LOG X))) (* 1/2 (EXPT X -1/2))))
+   (* (SQRT X) (SQRT X)))))
+
+(deriv-eval '(* (/ x (log x)) (/ (* (log x)(exp (log x))) (sqrt x))) 'x)
+
+====> 3.0
+
+h)
+(deriv '(* (/ (log (expt x 2)) (log x)) (/ (* x x) x)) 'x)
+
+====>(+ (* (/ (* X X) X) (/ (- (* (LOG X) (* (/ 1 (EXPT X 2)) (* 2 X))) (* (LOG (EXPT X 2)) (/ 1 X))) (* (LOG X) (LOG X))))
+ (* (/ (LOG (EXPT X 2)) (LOG X)) (/ (- (* X (+ X X)) (* X X)) (* X X))))
+
+(deriv-eval  '(* (/ (log (expt x 2)) (log x)) (/ (* x x) x)) 'x 4)
+
+
+====>2.0
+
+i)
+ (deriv '(/ (+ (sin (expt x 2)) (cos (expt x 2))) (- x 2)) 'x)
+
+====>(/ (- (* (- X 2) (+ (* (COS (EXPT X 2)) (* 2 X)) (- (* (SIN (EXPT X 2)) (* 2 X))))) (+ (SIN (EXPT X 2)) (COS (EXPT X 2))))
+ (* (- X 2) (- X 2)))
+
+(deriv-eval '(/ (+ (sin (expt x 2)) (cos (expt x 2))) (- x 2)) 'x 2)
+
+====>" Division by Zero. Error !!"
+
+
+j)
+ (deriv '(/ (* (* x (sqrt x)) (* (log x) (sqrt x))) (log x)) 'x)
+
+====>(/ (-  (* (LOG X)   (+ (* (* (LOG X) (SQRT X)) (+ (SQRT X) (* X (* 1/2 (EXPT X -1/2)))))
+    (* (* X (SQRT X)) (+ (* (SQRT X) (/ 1 X)) (* (LOG X) (* 1/2 (EXPT X -1/2)))))))
+  (* (* (* X (SQRT X)) (* (LOG X) (SQRT X))) (/ 1 X))) (* (LOG X) (LOG X)))
+
+ (deriv-eval '(/ (* (* x (sqrt x)) (* (log x) (sqrt x))) (log x)) 'x 10)
+
+====> 20.0
+
+
+4)Simplify examples
+
+
+a)(simplify '(* (- (- (* 1 x)) 0) 1))
+
+====> (- X)
+
+b)(simplify '(+ (sin 0) (* (cos 0) (exp x))))
+
+====>(EXP X)
+
+
+c)
+
+
+d)
+
+
+e)
