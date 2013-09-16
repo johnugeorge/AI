@@ -1,0 +1,38 @@
+Programming Assignment 1 --Symbolic Differentiator
+-------------------------
+
+1.Implementation for symbolic differentiation for addition, subtraction, 
+unary minus, multiplication, division, sqrt, log, exp,sin, cos, tan.
+
+( + f g) ,(- f g) ,(* f g) ,(/ f g), (- f) ,( sqrt f), (expt f y) , (exp f),
+(log f), (sin f), (cos f),(tan f)
+
+2.Usage
+
+a)Load the "deriv.lsp" program 
+		(load "deriv.lsp")
+
+b)Find the derivative for the expression <expr> with respect to variable <var>
+	(deriv '<expr> '<var>)
+
+c)Assign numerical value <val> to derivative of expression <expr> wrt to variable <var>
+	(deriv-eval '<expr> '<var> '<val>)
+
+d)Simplification function  that can recursively simplify expression <expr>
+	(simplify '<expr>)
+
+
+3. Examples
+
+
+a)(deriv '(/ (+ (* x (cos x)) (exp (log x))) (+ (expt x 4) (tan x))) 'x)
+
+===> (/ (- (* (+ (EXPT X 4) (TAN X)) (+ (+ (COS X) (* X (- (SIN X)))) (* (EXP (LOG X)) (/ 1 X))))
+  (* (+ (* X (COS X)) (EXP (LOG X))) (+ (* 4 (EXPT X 3)) (+ 1 (EXPT (TAN X) 2)))))
+ (* (+ (EXPT X 4) (TAN X)) (+ (EXPT X 4) (TAN X))))
+
+
+(deriv-eval  '(/ (+ (* x (cos x)) (exp (log x))) (+ (expt x 4) (tan x))) 'x  5)
+0.0012666791
+
+
