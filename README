@@ -1,5 +1,9 @@
 Programming Assignment 1 --Symbolic Differentiator
 -------------------------
+Submitted by
+
+Johnu George
+222003698
 
 1.Implementation for symbolic differentiation for addition, subtraction, 
 unary minus, multiplication, division, sqrt, log, exp,sin, cos, tan.
@@ -92,7 +96,7 @@ g)
   (/ (- (* (SQRT X) (+ (* (EXP (LOG X)) (/ 1 X)) (* (LOG X) (* (EXP (LOG X)) (/ 1 X))))) (* (* (LOG X) (EXP (LOG X))) (* 1/2 (EXPT X -1/2))))
    (* (SQRT X) (SQRT X)))))
 
-(deriv-eval '(* (/ x (log x)) (/ (* (log x)(exp (log x))) (sqrt x))) 'x)
+(deriv-eval '(* (/ x (log x)) (/ (* (log x)(exp (log x))) (sqrt x))) 'x 4)
 
 ====> 3.0
 
