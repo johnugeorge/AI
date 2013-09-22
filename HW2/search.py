@@ -24,20 +24,24 @@ def general_searchfn(arguments):
 	nodes_visited = 0
 	search_algo=arguments[0]
 	initial_state=arguments[1]
+	depth=1
+	if(arguments[2] is not ""):
+		depth=int(arguments[2])
 	print "Search Algo",search_algo
 	print "initial_state", initial_state
+	print "depth", depth
 	initial_node=initial_state.split()
 	initial_node=[int(n) for n in initial_node]
 	node_list.append(initial_node)
 	parentStateStr=''.join(str(e) for e in initial_node);
-	new_res= [None,None]
+	new_res= [None,None,1]
 	visited_nodes[parentStateStr] = new_res
 	while(1):
 		#search_string=raw_input('Enter your search string here: ')
 
 		#print "Node List",node_list
 		if not node_list:
-			print "Node list empty. returning"
+			print "Node list empty. No Solution"
 			return 0
 		first_state=node_list.popleft()
 		nodes_visited += 1
@@ -47,7 +51,11 @@ def general_searchfn(arguments):
 		if(first_state == GOAL_STATE):
 			print "Goal state reached"
 			return 1
-		children= getChildren(first_state);
+		parentStateStr=''.join(str(e) for e in first_state);
+		if((search_algo == "dls")  and (visited_nodes[parentStateStr][2] >= depth)):
+			children=list();
+		else:
+			children= getChildren(first_state);
 		#print "Children",children
 		if children:
 			queuing_fn(search_algo,first_state,children)
@@ -59,19 +67,22 @@ def queuing_fn(search_algo,parent,children):
 		node_list.extendleft(children)
 	elif(search_algo == "bfs"):
 		node_list.extend(children)
+	if(search_algo == "dls"):
+		node_list.extendleft(children)
 	
 
 	
 def getChildren(parent):
 	children=list();
+	parentStateStr=''.join(str(e) for e in parent);
 	for i in range(len(DIRECTIONS)):
 		if(isMoveValid(DIRECTIONS[i],parent)):
 			newChildState=getNewState(DIRECTIONS[i],parent);
 			#print "New Child State ",newChildState, "Direction",DIRECTIONS[i]
 			newChildStateStr=''.join(str(e) for e in newChildState);
-			if(not isAlreadyVisited(newChildStateStr)):
+			if(not isAlreadyVisited(newChildStateStr) ):
 				children.append(newChildState)
-				new_res= [parent,DIRECTIONS[i]]
+				new_res= [parent,DIRECTIONS[i],visited_nodes[parentStateStr][2] + 1]
 				visited_nodes[newChildStateStr] = new_res
 	#print "parent", parent, "children",children
 	return children
@@ -119,9 +130,9 @@ def getNewState(op, parent):
 
 
 def parse(arg):
-	match = re.search(r'\((\w+)\s*\'\(([\d\s]+)', arg)
+	match = re.search(r'\((\w+)\s*\'\(([\d\s]+)\)([\d\s]*)', arg)
 	if match:
-		ret = (match.group(1) ,match.group(2))
+		ret = (match.group(1) ,match.group(2),match.group(3))
 		return ret 
 	else:
 		print "Error in parsing the arguments. Verify the format"
