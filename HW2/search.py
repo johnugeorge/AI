@@ -21,6 +21,9 @@ def handler(signal, frame):
 
 def general_searchfn(arguments):
 	global node_list
+	global visited_nodes
+	visited_nodes=defaultdict(list)
+	node_list=deque()
 	nodes_visited = 0
 	search_algo=arguments[0]
 	initial_state=arguments[1]
@@ -52,7 +55,7 @@ def general_searchfn(arguments):
 			print "Goal state reached"
 			return 1
 		parentStateStr=''.join(str(e) for e in first_state);
-		if((search_algo == "dls")  and (visited_nodes[parentStateStr][2] >= depth)):
+		if(((search_algo == "dls") or (search_algo == "ids"))  and (visited_nodes[parentStateStr][2] >= depth)):
 			children=list();
 		else:
 			children= getChildren(first_state);
@@ -67,12 +70,15 @@ def queuing_fn(search_algo,parent,children):
 		node_list.extendleft(children)
 	elif(search_algo == "bfs"):
 		node_list.extend(children)
-	if(search_algo == "dls"):
+	elif(search_algo == "dls"):
+		node_list.extendleft(children)
+	elif(search_algo == "ids"):
 		node_list.extendleft(children)
 	
 
 	
 def getChildren(parent):
+	global visited_nodes
 	children=list();
 	parentStateStr=''.join(str(e) for e in parent);
 	for i in range(len(DIRECTIONS)):
@@ -137,7 +143,20 @@ def parse(arg):
 	else:
 		print "Error in parsing the arguments. Verify the format"
         
-	
+def searchfn(arguments):
+	search_algo=arguments[0]
+	initial_state=arguments[1]
+	if(search_algo == "ids"):
+		depth=0
+		while(1):
+			depth += 1
+			ret = general_searchfn((search_algo,initial_state,depth))
+			if ( ret == 1 ):
+				print "Solution found"
+				break
+	else:
+		general_searchfn(arguments)
+
 def main():
 	print "Main Function"
 	signal.signal(signal.SIGINT, handler)
@@ -145,7 +164,8 @@ def main():
 		print " Wrong Arguments"
 		exit(0)
 	arg=sys.argv[1]
-	general_searchfn(parse(arg));
+	#general_searchfn(parse(arg));
+	searchfn(parse(arg));
 
 
 if __name__ == '__main__':
