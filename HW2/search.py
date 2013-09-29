@@ -159,6 +159,8 @@ def searchfn(arguments):
 				break
 	elif(search_algo == 'greedy' or search_algo == 'astar'):
 		ret=heuristic_searchfn(arguments)
+	elif(search_algo == 'idastar'):
+		ret=idastar_searchfn(arguments)
 	else:
 		ret=general_searchfn(arguments)
 	if ( ret == 1 ):
@@ -168,6 +170,76 @@ def searchfn(arguments):
 		print "No solution found"
 		sys.exit()
 
+def idastar_searchfn(arguments):
+	global node_list
+	global visited_nodes
+	#visited_nodes=defaultdict(list)
+	#node_list=deque()
+	maxLengthOfQueue=0
+	nodes_visited = 0
+	search_algo=arguments[0]
+	initial_state=arguments[1]
+	if(arguments[2] is not ""):
+		heuristicFn=arguments[2]
+	else:
+		print "Error in getting heuristic"
+		sys.exit()
+	print "Search Algo",search_algo
+	print "initial_state", initial_state
+	print "HeuristicFn", heuristicFn
+	initial_node=initial_state.split()
+	initial_node=[int(n) for n in initial_node]
+	node_list.append((initial_node,0,1))
+	parentStateStr=''.join(str(e) for e in initial_node);
+	new_res= [None,None,1]
+	#visited_nodes[parentStateStr] = new_res
+	root=node_list[0][0]
+	fLimit=fCost(root,heuristicFn,1)
+	print "Initial fLimit",fLimit
+	while(1):
+		root=node_list[0][0]
+		visited_nodes=defaultdict(list)
+		visited_nodes[parentStateStr] = new_res
+		(solution,fLimit)=DfsContour(root,fLimit,heuristicFn)
+		if(solution is not None):
+			print "Goal state reached"
+			return 1
+		if(fLimit == sys.maxint):
+			print "No Solution Found"
+			return 0
+
+def DfsContour(state,fLimit,heuristicFn):
+	#raw_input()
+	stateStr=''.join(str(e) for e in state)
+	totalCost= fCost(state,heuristicFn, visited_nodes[stateStr][2])
+	#print " Flimit ",fLimit," totalCost ",totalCost
+
+	if(totalCost > fLimit):
+		return (None,totalCost)
+	if(state == GOAL_STATE):
+		print "Solution Found"
+		return (GOAL_STATE,fLimit)
+	minVal=sys.maxint
+        children=getChildrenHeuristic(state,heuristicFn)
+	#print "state ",state , "Children ",children
+	#print "Visited nodes" ,visited_nodes
+	for child in children:
+		childStr = ''.join(str(e) for e in child[0])
+		fLimitChild=fCost(child[0],heuristicFn,visited_nodes[childStr][2])
+		(solution,fVal)=DfsContour(child[0],fLimit,heuristicFn)
+		if(solution is not None):
+			return (solution,fLimit)
+		if(fVal < minVal):
+			minVal=fVal
+        return (None,minVal) 
+	
+        
+
+
+def fCost(state,heuristicFn,actualCost):
+	heuristicVal= findHeuristicVal(state,heuristicFn)
+	totalCost=heuristicVal + actualCost
+	return totalCost
 
 def heuristic_searchfn(arguments):
 	global node_list
@@ -188,7 +260,7 @@ def heuristic_searchfn(arguments):
 	print "HeuristicFn", heuristicFn
 	initial_node=initial_state.split()
 	initial_node=[int(n) for n in initial_node]
-	node_list.append((initial_node,0,0))
+	node_list.append((initial_node,0,1))
 	parentStateStr=''.join(str(e) for e in initial_node);
 	new_res= [None,None,1]
 	visited_nodes[parentStateStr] = new_res
