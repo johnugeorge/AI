@@ -136,7 +136,7 @@ def getNewState(op, parent):
 
 
 def parse(arg):
-	match = re.search(r'\((\w+)\s*\'\(([\d\s]+)\)([\d\s]*)', arg)
+	match = re.search(r'\((\w+)\s*\'\(([\d\s]+)\)[\'\s]*([\w\d\s]*)', arg)
 	if match:
 		ret = (match.group(1) ,match.group(2),match.group(3))
 		return ret 
@@ -154,8 +154,116 @@ def searchfn(arguments):
 			if ( ret == 1 ):
 				print "Solution found"
 				break
+	elif(search_algo == 'greedy' or search_algo == 'astar'):
+		ret=heuristic_searchfn(arguments)
 	else:
-		general_searchfn(arguments)
+		ret=general_searchfn(arguments)
+	if ( ret == 1 ):
+		print "Solution found"
+		return 1
+	else:
+		print "No solution found"
+		sys.exit()
+
+
+def heuristic_searchfn(arguments):
+	global node_list
+	global visited_nodes
+	visited_nodes=defaultdict(list)
+	node_list=deque()
+	nodes_visited = 0
+	search_algo=arguments[0]
+	initial_state=arguments[1]
+	if(arguments[2] is not ""):
+		heuristicFn=arguments[2]
+	else:
+		print "Error in getting heuristic"
+		sys.exit()
+	print "Search Algo",search_algo
+	print "initial_state", initial_state
+	print "HeuristicFn", heuristicFn
+	initial_node=initial_state.split()
+	initial_node=[int(n) for n in initial_node]
+	node_list.append((initial_node,0,0))
+	parentStateStr=''.join(str(e) for e in initial_node);
+	new_res= [None,None,1]
+	visited_nodes[parentStateStr] = new_res
+	while(1):
+		#search_string=raw_input('Enter your search string here: ')
+
+		#print "Node List",node_list
+		if not node_list:
+			print "Node list empty. No Solution"
+			return 0
+		if(search_algo == "greedy"):
+			node_list=deque(sorted(node_list,key=lambda tup: tup[1]))
+		elif(search_algo == "astar"):
+			node_list=deque(sorted(node_list,key=lambda tup: tup[1]+tup[2]))
+		else:
+			print "Error search algo"
+			sys.exit()
+		first_state=node_list.popleft()
+		nodes_visited += 1
+		#print "Popped one element " , first_state
+		print "Nodes visited ",nodes_visited
+		#print "Present State ",first_state , "Goal State ",GOAL_STATE
+		if(first_state[0] == GOAL_STATE):
+			print "Goal state reached"
+			return 1
+		parentStateStr=''.join(str(e) for e in first_state[0]);
+		children= getChildrenHeuristic(first_state[0],heuristicFn);
+		#print "Children",children
+		if children:
+			node_list.extend(children)
+
+
+def getChildrenHeuristic(parent,heuristicFn):
+	global visited_nodes
+	children=list();
+	#print "Parent ",parent
+	parentStateStr=''.join(str(e) for e in parent);
+	for i in range(len(DIRECTIONS)):
+		if(isMoveValid(DIRECTIONS[i],parent)):
+			newChildState=getNewState(DIRECTIONS[i],parent);
+			heuristicVal=findHeuristicVal(newChildState,heuristicFn)
+			#print "New Child State ",newChildState, "Direction",DIRECTIONS[i]
+			newChildStateStr=''.join(str(e) for e in newChildState);
+			if(not isAlreadyVisited(newChildStateStr) ):
+				children.append((newChildState,heuristicVal,visited_nodes[parentStateStr][2] + 1))
+				new_res= [parentStateStr,DIRECTIONS[i],visited_nodes[parentStateStr][2] + 1]
+				visited_nodes[newChildStateStr] = new_res
+	#print "parent", parent, "children",children
+	return children
+			
+
+def findHeuristicVal(state,heuristicFn):
+	heuristic_val=0
+	if(heuristicFn == "h1"):
+		for i in state:
+			if(state[i] != GOAL_STATE[i] and state[i] != 0):
+				heuristic_val = heuristic_val +1
+
+	elif(heuristicFn == "h2"):
+		print "to be implemented"
+
+	else:
+		print "No defined Heuristic fn ", heuristicFn
+		sys.exit()
+	#print "heuristic_val " , heuristic_val
+	return heuristic_val
+
+def printPath():
+	goalStateStr=''.join(str(e) for e in GOAL_STATE);
+        temp=goalStateStr
+	directions=[]
+	while(visited_nodes[temp][0] != None):
+		#print " directions ", visited_nodes[temp][1]
+		directions.append(visited_nodes[temp][1])
+                temp= visited_nodes[temp][0]
+	print "======Path from Input to Goal==========="
+	for i in reversed(directions):
+		sys.stdout.write(i+" ")
+	print
 
 def main():
 	print "Main Function"
@@ -165,7 +273,8 @@ def main():
 		exit(0)
 	arg=sys.argv[1]
 	#general_searchfn(parse(arg));
-	searchfn(parse(arg));
+	if(searchfn(parse(arg)) == 1):
+		printPath()
 
 
 if __name__ == '__main__':
