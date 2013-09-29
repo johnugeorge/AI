@@ -27,6 +27,7 @@ def general_searchfn(arguments):
 	nodes_visited = 0
 	search_algo=arguments[0]
 	initial_state=arguments[1]
+	maxLengthOfQueue=0
 	depth=1
 	if(arguments[2] is not ""):
 		depth=int(arguments[2])
@@ -46,6 +47,8 @@ def general_searchfn(arguments):
 		if not node_list:
 			print "Node list empty. No Solution"
 			return 0
+		if(maxLengthOfQueue < len(node_list)):
+			maxLengthOfQueue =len(node_list)
 		first_state=node_list.popleft()
 		nodes_visited += 1
 		#print "Popped one element " , first_state
@@ -171,6 +174,7 @@ def heuristic_searchfn(arguments):
 	global visited_nodes
 	visited_nodes=defaultdict(list)
 	node_list=deque()
+	maxLengthOfQueue=0
 	nodes_visited = 0
 	search_algo=arguments[0]
 	initial_state=arguments[1]
@@ -195,6 +199,8 @@ def heuristic_searchfn(arguments):
 		if not node_list:
 			print "Node list empty. No Solution"
 			return 0
+		if(maxLengthOfQueue < len(node_list)):
+			maxLengthOfQueue =len(node_list)
 		if(search_algo == "greedy"):
 			node_list=deque(sorted(node_list,key=lambda tup: tup[1]))
 		elif(search_algo == "astar"):
@@ -206,6 +212,7 @@ def heuristic_searchfn(arguments):
 		nodes_visited += 1
 		#print "Popped one element " , first_state
 		print "Nodes visited ",nodes_visited
+		print "MaxLength of Queue",maxLengthOfQueue
 		#print "Present State ",first_state , "Goal State ",GOAL_STATE
 		if(first_state[0] == GOAL_STATE):
 			print "Goal state reached"
