@@ -88,7 +88,7 @@ def getChildren(parent):
 			newChildStateStr=''.join(str(e) for e in newChildState);
 			if(not isAlreadyVisited(newChildStateStr) ):
 				children.append(newChildState)
-				new_res= [parent,DIRECTIONS[i],visited_nodes[parentStateStr][2] + 1]
+				new_res= [parentStateStr,DIRECTIONS[i],visited_nodes[parentStateStr][2] + 1]
 				visited_nodes[newChildStateStr] = new_res
 	#print "parent", parent, "children",children
 	return children
@@ -261,6 +261,10 @@ def printPath():
 		directions.append(visited_nodes[temp][1])
                 temp= visited_nodes[temp][0]
 	print "======Path from Input to Goal==========="
+	print "Total Movements",len(directions)
+	if(len(directions) > 20):
+		print "Not printing directions as total moves needed > 20"
+		return
 	for i in reversed(directions):
 		sys.stdout.write(i+" ")
 	print
