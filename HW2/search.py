@@ -10,7 +10,7 @@ node_list=deque()
 
 GOAL_STATE=[1, 2, 3, 8, 0, 4, 7, 6, 5]
 DIRECTIONS=["RIGHT","LEFT","UP","DOWN"]
-
+goalStateStr=''.join(str(e) for e in GOAL_STATE);
 def handler(signal, frame):
 	print
 	print 'You pressed Ctrl+C!..Quiting'
@@ -196,6 +196,10 @@ def idastar_searchfn(arguments):
 		(solution,fLimit)=DfsContour(root,fLimit,heuristicFn)
 		if(solution is not None):
 			print "Goal state reached"
+			print
+			print "======== RESULTS==========="
+			print "Maximum depth of recursion :",visited_nodes[goalStateStr][2]
+			print
 			return 1
 		if(fLimit == sys.maxint):
 			print "No Solution Found"
