@@ -32,7 +32,7 @@ def general_searchfn(arguments):
 	if(arguments[2] is not ""):
 		depth=int(arguments[2])
 	print "Search Algo",search_algo
-	print "initial_state", initial_state
+	#print "initial_state", initial_state
 	print "depth", depth
 	initial_node=initial_state.split()
 	initial_node=[int(n) for n in initial_node]
@@ -98,6 +98,7 @@ def getChildren(parent):
 			
 
 def isAlreadyVisited(child):
+	global visited_nodes
 	if not child in visited_nodes:
 		return False
 	else:
@@ -185,7 +186,7 @@ def idastar_searchfn(arguments):
 		print "Error in getting heuristic"
 		sys.exit()
 	print "Search Algo",search_algo
-	print "initial_state", initial_state
+	#print "initial_state", initial_state
 	print "HeuristicFn", heuristicFn
 	initial_node=initial_state.split()
 	initial_node=[int(n) for n in initial_node]
@@ -195,7 +196,6 @@ def idastar_searchfn(arguments):
 	#visited_nodes[parentStateStr] = new_res
 	root=node_list[0][0]
 	fLimit=fCost(root,heuristicFn,1)
-	print "Initial fLimit",fLimit
 	while(1):
 		root=node_list[0][0]
 		visited_nodes=defaultdict(list)
@@ -213,17 +213,18 @@ def DfsContour(state,fLimit,heuristicFn):
 	stateStr=''.join(str(e) for e in state)
 	totalCost= fCost(state,heuristicFn, visited_nodes[stateStr][2])
 	#print " Flimit ",fLimit," totalCost ",totalCost
-
+        #print state
 	if(totalCost > fLimit):
 		return (None,totalCost)
 	if(state == GOAL_STATE):
-		print "Solution Found"
+		#print "Solution Found"
 		return (GOAL_STATE,fLimit)
 	minVal=sys.maxint
         children=getChildrenHeuristic(state,heuristicFn)
 	#print "state ",state , "Children ",children
 	#print "Visited nodes" ,visited_nodes
 	for child in children:
+		#print "state ",state , "Child",child ," flimit ", fLimit, "TotalCost ",totalCost
 		childStr = ''.join(str(e) for e in child[0])
 		fLimitChild=fCost(child[0],heuristicFn,visited_nodes[childStr][2])
 		(solution,fVal)=DfsContour(child[0],fLimit,heuristicFn)
@@ -256,7 +257,7 @@ def heuristic_searchfn(arguments):
 		print "Error in getting heuristic"
 		sys.exit()
 	print "Search Algo",search_algo
-	print "initial_state", initial_state
+	#print "initial_state", initial_state
 	print "HeuristicFn", heuristicFn
 	initial_node=initial_state.split()
 	initial_node=[int(n) for n in initial_node]
@@ -323,7 +324,23 @@ def findHeuristicVal(state,heuristicFn):
 				heuristic_val = heuristic_val +1
 
 	elif(heuristicFn == "h2"):
-		print "to be implemented"
+		for elem in state:
+			if(elem !=0):
+				currentPos=state.index(elem)
+				finalPos=GOAL_STATE.index(elem)
+				#print "Elem ",elem," currentPos ",currentPos, "finalPos ",finalPos
+				while((currentPos/3 - finalPos/3) != 0):
+					if(currentPos > finalPos):
+						currentPos -= 3
+					elif(currentPos < finalPos):
+						currentPos += 3
+					heuristic_val +=1
+				heuristic_val += abs(currentPos - finalPos)
+				#print "Elem ",elem," heuristic_val ",heuristic_val
+		#print "state ",state ,"Heuristic Val ",heuristic_val
+		return heuristic_val
+
+
 
 	else:
 		print "No defined Heuristic fn ", heuristicFn
@@ -341,8 +358,8 @@ def printPath():
                 temp= visited_nodes[temp][0]
 	print "======Path from Input to Goal==========="
 	print "Total Movements",len(directions)
-	if(len(directions) > 20):
-		print "Not printing directions as total moves needed > 20"
+	if(len(directions) > 50):
+		print "Not printing directions as total moves needed > 50"
 		return
 	for i in reversed(directions):
 		sys.stdout.write(i+" ")
