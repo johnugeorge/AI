@@ -12,6 +12,7 @@ GOAL_STATE=[1, 2, 3, 8, 0, 4, 7, 6, 5]
 DIRECTIONS=["RIGHT","LEFT","UP","DOWN"]
 
 ida_nodes_visited=1
+nodes_visited = 0
 
 goalStateStr=''.join(str(e) for e in GOAL_STATE);
 def handler(signal, frame):
@@ -24,9 +25,9 @@ def handler(signal, frame):
 def general_searchfn(arguments):
 	global node_list
 	global visited_nodes
+	global nodes_visited
 	visited_nodes=defaultdict(list)
 	node_list=deque()
-	nodes_visited = 0
 	search_algo=arguments[0]
 	initial_state=arguments[1]
 	maxLengthOfQueue=0
@@ -148,6 +149,8 @@ def parse(arg):
        
  #Function to call the respective serach function(Informed/UnInformed)      
 def searchfn(arguments):
+	global nodes_visited
+	nodes_visited=0
 	search_algo=arguments[0]
 	initial_state=arguments[1]
 	if(search_algo == "ids"):

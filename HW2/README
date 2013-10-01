@@ -59,8 +59,12 @@ UP RIGHT UP LEFT DOWN
 
 =================================
 ========Analysis=================
+Time Complexity is proportional to number of Nodes visited.
+Space Complexity is propotional to maximum length of Node list for all algorithms except IDA*. For Ida*, maximum depth of recursion is recorded.
+All values are printed below for easy, medium and hard inputs.
 
-For easy problem (1 3 4 8 6 2 7 0 5)
+
+For easy problem-- Initial State (1 3 4 8 6 2 7 0 5)
         	Nodes Visited			Movements Needed              Maximum Length of Node List/Max Depth                
 
 dfs		  	5647				  5503 			  4375
@@ -69,7 +73,7 @@ bfs			51				  5			  32
 
 dls(depth=1000)		89453				  997			  803
 
-ids			28				  5			  7
+ids			94				  5			  7
 
 greedy-h1		6				  5			  7
 
@@ -86,7 +90,7 @@ idastar-h2		9				  5			  6
 
 
 
-For medium problem (2 8 1 0 4 3 7 6 5)
+For medium problem-- Initial State (2 8 1 0 4 3 7 6 5)
         	Nodes Visited			Movements Needed              Maximum Length of Node List/Max Depth                
 
 dfs	 		26383			  	25267				19319 
@@ -95,7 +99,7 @@ bfs			393				9				249
 
 dls(depth=1000)		2994				999				803
 
-ids			284				9				10
+ids			940				9				10
 
 greedy-h1		148				9				88
 
@@ -111,7 +115,7 @@ idastar-h2		24				9				10
 
 
 
-For hard problem (5 6 7 4 0 8 3 2 1)
+For hard problem-- Initial State (5 6 7 4 0 8 3 2 1)
         	Nodes Visited			Movements Needed              Maximum Length of Node List/Max Depth                
 
 dfs	 		4702				4578				3651 
@@ -120,7 +124,7 @@ bfs			181364				30				24983
 
 dls(depth=1000)		82373				998				803
 
-ids			43014				32				29
+ids			401791				32				29
 
 greedy-h1		1397				64				841
 
@@ -133,3 +137,83 @@ astar-h2		3470				30				1734
 idastar-h1		137341				32				33	
 
 idastar-h2		859				30				31
+
+
+========================================
+========= Comparison of Algorithms=====
+
+DFS
+---
+It can be noted that DFS search needed most number of movements to reach the goal because it tries to wander along the wrong path.Due
+to this, it reached goal after traversing with more movements. It is bad because position of goal is actually shallow but, search went on to 
+wrong path.Hence, BFS search has lesser number of movements than DFS for all problems.
+
+
+BFS
+---
+It can be seen that space complexity increases exponentially with depth. As, goal becomes more and more deep, BFS space requirements 
+increases exponentially.(32 for easy ,249 for medium , 3651 for hard)
+Time also increases exponentially as depth increases.(51 for easy, 393 for medium ,181364 for hard) Thus it is clear that BFS hold
+good only for problems with shallow goals.But,it is better than DFS for problems with shallow goals.
+
+
+DLS
+---
+It can be seen that number of movements required for DLS are less than number of movements required for DFS. This happens because
+solution is at a finite or limited depth and hence, space requirements are much less than DFS. DLS doesn't go traverse any wrong path
+more than the input depth. Since, space complexity is order of 'bm' where b is the branching factor and m is the depth, DLS has better 
+solution space when space is considered.
+
+IDS
+---
+Since depth is iteratively incremented , it has the better performance than any other uninformed search. Unlike DFS,It doesn't go into
+wrong path eternally and it has the added advantage of finding shallow solutions as depth is incremented by one. Space required for IDS
+is less than that of DFS. Time taken is more when compared to BFS as DLA would have covered b^n nodes while latter would have covered b^n-1
+nodes.
+
+
+Greedy
+------
+Greedy best first search algorithm is worst among the informed search algorithms because it doesn't take care of actual cost to reach
+a state from the initial state. Since, depth is not considered which is the actual cost in this case, it take more movements to reach the 
+goal than other informed searches.It can be seen that performance increases with better heuristic. In this case,manhattan distance(h2) is 
+a better heuristic than h1(tiles out of place)
+
+A*
+---
+A* search algorithm is complete and optimal and f-value never decreases along the path.Since it considers actual cost when computing
+f-value, it is better than greedy approach. A* has higher memory usage when compared to IDA* because A* pushes all successors onto the node list.
+It can be seen that performance increases with better heuristic. In this case,manhattan distance(h2) is a better heuristic than h1(tiles out of place)
+
+
+IDA*
+----
+IDA* is little slower than A* as it explores the same set of nodes again. It doesn't keep track of visited nodes in the previous run. It uses
+less memory when compared to A* as it doesn't push all the successor's of a state into the node list and instead, it minimally increases
+the f-limit in each loop.It can be seen that performance increases with better heuristic. In this case,manhattan distance(h2) is a better heuristic than h1(tiles out of place)
+
+		IDA* -h1 on hard problem :
+                                Time Complexity : 137341 
+				Space Complexity:    33
+		A* -h1  on hard:  
+				Time Complexity :129227
+				Space Complexity:25976
+
+	
+
+========================
+=====Notes==============
+
+A* search with 'h1' heuristic on hard problem took around 10-15min for execution.It can be seen that 25976 nodes are added to the node list
+which takes much time in sorting in each loop. A* consumes more space when compared to IDA* since all the successors are added to the node list.
+While, with better heuristic 'h2', maximum nodes in node list got reduced to 1734, which completed in less than 5 sec.
+
+
+
+
+
+
+
+
+
+ 
