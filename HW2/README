@@ -1,0 +1,135 @@
+
+The program is written in python and it takes same lisp arguments in quotes.
+======How to Run==============
+
+python eight.py "<lisp argument>" 
+(Remember to put quotes)
+==============================
+
+======Example=================
+python eight.py "(dfs '(1 3 4 8 6 2 7 0 5))"
+
+python eight.py "(bfs '(1 3 4 8 6 2 7 0 5))"
+
+python eight.py "(dls '(1 3 4 8 6 2 7 0 5) 1000)"
+
+python eight.py "(ids '(1 3 4 8 6 2 7 0 5))"
+
+python eight.py "(greedy '(1 3 4 8 6 2 7 0 5) 'h1)"
+
+python eight.py "(greedy '(1 3 4 8 6 2 7 0 5) 'h2)"
+
+python eight.py "(astar '(1 3 4 8 6 2 7 0 5) 'h1)"
+
+python eight.py "(astar '(1 3 4 8 6 2 7 0 5) 'h2)"
+
+python eight.py "(idastar '(1 3 4 8 6 2 7 0 5) 'h1)"
+
+python eight.py "(idastar '(1 3 4 8 6 2 7 0 5) 'h2)"
+
+===============================
+==========Output===============
+
+For every search algorithm except idastar, total number of nodes visited and maximum length of node list are printed.
+For idastar, maximum depth of recursion is printed.
+
+For every search algorithm, total number of movements are printed. Total movements are also printed from initial state
+   to  goal state and they are truncated to first 50 movements if total number of movements are greater than 50 to reach goal.
+
+
+For example:::
+
+python eight.py "(bfs '(1 3 4 8 6 2 7 0 5))"
+
+Search Algorithm : bfs
+Initial_state    :( 1 3 4 8 6 2 7 0 5 )
+
+Goal state reached
+
+======== RESULTS===========
+Total Number of Nodes Visited : 51
+Maximum Length of Node List   : 32
+
+======Path from Input to Goal===========
+Total Movements Needed to reach Goal State: 5
+
+Movements from Initial State:
+
+UP RIGHT UP LEFT DOWN
+
+=================================
+========Analysis=================
+
+For easy problem (1 3 4 8 6 2 7 0 5)
+        	Nodes Visited			Movements Needed              Maximum Length of Node List/Max Depth                
+
+dfs		  	5647				  5503 			  4375
+
+bfs			51				  5			  32
+
+dls(depth=1000)		89453				  997			  803
+
+ids			28				  5			  7
+
+greedy-h1		6				  5			  7
+
+greedy-h2		6				  5			  7
+
+astar-h1		7				  5			  8
+
+astar-h2		6				  5			  7
+
+idastar-h1						  5			  6
+
+idastar-h2						  5			  6
+
+
+
+
+For medium problem (2 8 1 0 4 3 7 6 5)
+        	Nodes Visited			Movements Needed              Maximum Length of Node List/Max Depth                
+
+dfs	 		26383			  	25267				19319 
+
+bfs			393				9				249
+
+dls(depth=1000)		2994				999				803
+
+ids			284				9				10
+
+greedy-h1		148				9				88
+
+greedy-h2		219				35				146
+
+astar-h1		32				9				27
+
+astar-h2		16				9				13
+
+idastar-h1						9				10
+
+idastar-h2						9				10
+
+
+
+For hard problem (5 6 7 4 0 8 3 2 1)
+        	Nodes Visited			Movements Needed              Maximum Length of Node List/Max Depth                
+
+dfs	 		4702				4578				3651 
+
+bfs			181364				30				24983
+
+dls(depth=1000)		82373				998				803
+
+ids			43014				32				29
+
+greedy-h1		1397				64				841
+
+greedy-h2		302				66				197
+
+astar-h1		
+
+astar-h2
+
+idastar-h1
+
+idastar-h2
