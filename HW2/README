@@ -79,9 +79,9 @@ astar-h1		7				  5			  8
 
 astar-h2		6				  5			  7
 
-idastar-h1						  5			  6
+idastar-h1		15				  5			  6
 
-idastar-h2						  5			  6
+idastar-h2		9				  5			  6
 
 
 
@@ -105,9 +105,9 @@ astar-h1		32				9				27
 
 astar-h2		16				9				13
 
-idastar-h1						9				10
+idastar-h1		100				9				10
 
-idastar-h2						9				10
+idastar-h2		24				9				10
 
 
 
@@ -126,10 +126,10 @@ greedy-h1		1397				64				841
 
 greedy-h2		302				66				197
 
-astar-h1		
+astar-h1		129227				30				25976	
 
-astar-h2
+astar-h2		3470				30				1734
 
-idastar-h1
+idastar-h1		137341				32				33	
 
-idastar-h2
+idastar-h2		859				30				31

@@ -10,6 +10,9 @@ node_list=deque()
 
 GOAL_STATE=[1, 2, 3, 8, 0, 4, 7, 6, 5]
 DIRECTIONS=["RIGHT","LEFT","UP","DOWN"]
+
+ida_nodes_visited=1
+
 goalStateStr=''.join(str(e) for e in GOAL_STATE);
 def handler(signal, frame):
 	print
@@ -171,6 +174,8 @@ def searchfn(arguments):
 def idastar_searchfn(arguments):
 	global node_list
 	global visited_nodes
+	global ida_nodes_visited
+	ida_nodes_visited=1
 	maxLengthOfQueue=0
 	nodes_visited = 0
 	search_algo=arguments[0]
@@ -201,7 +206,8 @@ def idastar_searchfn(arguments):
 			print "Goal state reached"
 			print
 			print "======== RESULTS==========="
-			print "Maximum depth of recursion :",visited_nodes[goalStateStr][2]
+			print "Total Number of Nodes Visited :",ida_nodes_visited
+			print "Maximum depth of recursion    :",visited_nodes[goalStateStr][2]
 			print
 			return 1
 		if(fLimit == sys.maxint):
@@ -210,6 +216,7 @@ def idastar_searchfn(arguments):
 
 #Implementation of DFS Contour function of IDA*
 def DfsContour(state,fLimit,heuristicFn):
+	global ida_nodes_visited
 	stateStr=''.join(str(e) for e in state)
 	totalCost= fCost(state,heuristicFn, visited_nodes[stateStr][2])
 	if(totalCost > fLimit):
@@ -219,6 +226,7 @@ def DfsContour(state,fLimit,heuristicFn):
 	minVal=sys.maxint
         children=getChildrenHeuristic(state,heuristicFn)
 	for child in children:
+		ida_nodes_visited += 1
 		childStr = ''.join(str(e) for e in child[0])
 		fLimitChild=fCost(child[0],heuristicFn,visited_nodes[childStr][2])
 		(solution,fVal)=DfsContour(child[0],fLimit,heuristicFn)
